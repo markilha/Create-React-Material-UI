@@ -65,7 +65,7 @@ export default function Employees() {
     }
 
     const addOrEdit = (lote, resetForm) => {
-        if (lote.id == 0)
+        if (lote.imoid == 0)
             employeeService.insertLote(lote)
         else
             employeeService.updateLote(lote)

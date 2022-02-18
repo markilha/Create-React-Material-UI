@@ -3,30 +3,29 @@ const KEYS = {
     loteId: 'loteId'
 }
 
-export const getDepartmentCollection = () => ([
-    { id: '1', title: 'Development' },
-    { id: '2', title: 'Marketing' },
-    { id: '3', title: 'Accounting' },
-    { id: '4', title: 'HR' },
+export const getStatus= () => ([
+    { id: '1', title: 'Análise' },
+    { id: '2', title: 'Pendente' },
+    { id: '3', title: 'Titulado' },    
 ])
 
 export function insertLote(data) {
     let lotes = getAlllotes();
-    data['id'] = generateloteId()
+    data['imoid'] = generateloteId()
     lotes.push(data)
     localStorage.setItem(KEYS.lotes, JSON.stringify(lotes))
 }
 
 export function updateLote(data) {
     let lotes = getAlllotes();
-    let recordIndex = lotes.findIndex(x => x.id == data.id);
+    let recordIndex = lotes.findIndex(x => x.imoid== data.imoid);
     lotes[recordIndex] = { ...data }
     localStorage.setItem(KEYS.lotes, JSON.stringify(lotes));
 }
 
 export function deleteLote(id) {
     let lotes = getAlllotes();
-    lotes = lotes.filter(x => x.id != id)
+    lotes = lotes.filter(x => x.imoid != id)
     localStorage.setItem(KEYS.lotes, JSON.stringify(lotes));
 }
 
@@ -43,10 +42,9 @@ export function getAlllotes() {
         localStorage.setItem(KEYS.lotes, JSON.stringify([]))
 
 
-    //let lotes = JSON.parse(localStorage.getItem(KEYS.lotes));   
-    // let departments = getDepartmentCollection();
-    // return lotes.map(x => ({
-    //     ...x,
-    //     department: departments[x.departmentId - 1].title
-    // }))
+    let lotes = JSON.parse(localStorage.getItem(KEYS.lotes));   
+    //let estatus = getStatus();
+    return lotes.map(x => ({
+        ...x        
+    }))
 }
