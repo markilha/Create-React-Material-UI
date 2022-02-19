@@ -49,8 +49,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <SideMenu />
       <div className={classes.appMain}>
-        <Header />
-        
+        <Header />        
         <Lotes />
       </div>
       <CssBaseline />

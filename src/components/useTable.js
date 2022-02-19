@@ -82,7 +82,7 @@ export default function useTable(records, headCells,filterFn) {
         onChangeRowsPerPage={handleChangeRowsPerPage}
     />)
 
-    function stableSort(array, comparator) {       
+    function stableSort(array, comparator) {          
         const stabilizedThis = array.map((el, index) => [el, index]);
         stabilizedThis.sort((a, b) => {
             const order = comparator(a[0], b[0]);

@@ -54,11 +54,11 @@ export default function ConfirmDialog(props) {
             </DialogContent>
             <DialogActions className={classes.dialogAction}>
                 <Controls.Button
-                    text="No"
+                    text="Não"
                     color="default"
                     onClick={() => setConfirmDialog({ ...confirmDialog, isOpen: false })} />
                 <Controls.Button
-                    text="Yes"
+                    text="Sim"
                     color="secondary"
                     onClick={confirmDialog.onConfirm} />
             </DialogActions>
