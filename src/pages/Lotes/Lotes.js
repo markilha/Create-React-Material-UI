@@ -10,7 +10,6 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import useTable from "../../components/useTable";
-import * as loteServices from "../../services/loteServices";
 import Controls from "../../components/controls/Controls";
 import { Search } from "@material-ui/icons";
 import AddIcon from "@material-ui/icons/Add";
@@ -27,11 +26,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   searchInput: {
-    width: "75%",
+    width: "90%",
   },
   newButton: {
     position: "absolute",
-    right: "10px",
+    right: "5px",
   },
 }));
 
@@ -39,12 +38,13 @@ const headCells = [
   { id: "imogeo", label: "Codigo" },
   { id: "imosql", label: "SQL" },
   { id: "imomun", label: "Municipio" },
-  { id: "imobai", label: "Bairro" },
+  { id: "imobai", label: "Bairro" }, 
   { id: "acoes", label: "Ações", disableSorting: true },
 ];
 
 export default function Employees() {
   const classes = useStyles();
+  const [atual, setAtual] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [records, setRecords] = useState([]);
   const [filterFn, setFilterFn] = useState({
@@ -71,31 +71,72 @@ export default function Employees() {
     async function loadLotes() {
       try {
         const pesq = {
-          pesquisa: `SELECT * FROM tblimo ORDER BY imogeo ASC`,
+          query: `SELECT * FROM tblimo ORDER BY imogeo ASC`,
         };
         const response = await api.post("/lotes", pesq);
         setRecords(response.data.response.lotes);
       } catch {}
     }
     loadLotes();
-  }, []);
+  }, [atual]);
 
   const handleSearch = (e) => {
     let target = e.target;
     setFilterFn({
       fn: (items) => {
-        if (target.value == "") return items;
-        else
+        if (target.value == "") {
+          return items;
+        } else {
           return items.filter((x) =>
-            x.sql.toLowerCase().includes(target.value)
+            x.imosql.toLowerCase().includes(target.value)
           );
+        }
+      },
+    });
+  };
+  const handleSearchMnicipio = (e) => {
+    let target = e.target;
+    setFilterFn({
+      fn: (items) => {
+        if (target.value == "") {
+          return items;
+        } else {
+          return items.filter((x) =>
+            x.imomun.toLowerCase().includes(target.value)
+          );
+        }
       },
     });
   };
 
   const addOrEdit = (lote, resetForm) => {
-    if (lote.imoid == 0) loteServices.insertLote(lote);
-    else loteServices.updateLote(lote);
+    if (lote.imoid == 0) {
+      async function updateLote() {
+        try {
+          const query = {
+            query: `UPDATE tblimo SET imosql = '${lote.imosql}' WHERE imoid = ${lote.imoid}`,
+          };
+          await api.post("/lotes", query);
+          setAtual(!atual);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      updateLote();
+    } else {
+      async function updateLote() {
+        try {
+          const query = {
+            query: `UPDATE tblimo SET imosql = '${lote.imosql}' WHERE imoid = ${lote.imoid}`,
+          };
+          await api.patch("/lotes", query);
+          setAtual(!atual);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      updateLote();
+    }
     resetForm();
     setRecordForEdit(null);
     setOpenPopup(false);
@@ -118,7 +159,15 @@ export default function Employees() {
       isOpen: false,
     });
     async function dellLote() {
-      await api.delete(`/lotes/${id}`);
+      const query = {
+        query: `DELETE FROM tblimo WHERE imoid = ${id}`,
+      };
+      try {
+        await api.post(`/lotes`, query);
+        setAtual(!atual);
+      } catch (err) {
+        console.log(err);
+      }
     }
     dellLote();
 
@@ -145,6 +194,18 @@ export default function Employees() {
             }}
             onChange={handleSearch}
           />
+          <Controls.Input
+            label="Município"
+            className={classes.searchInput}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search />
+                </InputAdornment>
+              ),
+            }}
+            onChange={handleSearchMnicipio}
+          />
           <Controls.Button
             text="Novo lote"
             variant="outlined"
@@ -165,6 +226,7 @@ export default function Employees() {
                 <TableCell>{item.imosql}</TableCell>
                 <TableCell>{item.imomun}</TableCell>
                 <TableCell>{item.imobai}</TableCell>
+              
                 <TableCell>
                   <Controls.ActionButton
                     color="primary"
@@ -174,6 +236,7 @@ export default function Employees() {
                   >
                     <EditOutlinedIcon fontSize="small" />
                   </Controls.ActionButton>
+
                   <Controls.ActionButton
                     color="secondary"
                     onClick={() => {
