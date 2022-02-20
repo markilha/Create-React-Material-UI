@@ -1,13 +1,10 @@
-import React, { useEffect } from "react";
-import { Grid} from "@material-ui/core";
-import Controls from "../../components/controls/Controls";
-import { useForm, Form } from "../../components/useForm";
-//import * as employeeService from "../../services/employeeService";
+import React, { useEffect, useState } from "react";
+import { Grid, Button, ButtonGroup } from "@material-ui/core";
 
-const pessoaItems = [
-  { id: "Física", title: "Física" },
-  { id: "Jurídica", title: "Jurídica" },
-];
+import Controls from "../../components/controls/Controls";
+import { useForm } from "../../components/useForm";
+import LoteJuridico from "./LoteJuridico";
+import LoteNormal from "./LoteNormal";
 
 const initialFValues = {
   imoid: 0,
@@ -20,6 +17,7 @@ const initialFValues = {
 
 export default function LoteForm(props) {
   const { addOrEdit, recordForEdit } = props;
+  const [ativo, setAtivo] = useState(0);
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
@@ -29,7 +27,8 @@ export default function LoteForm(props) {
       ...temp,
     });
 
-    if (fieldValues === values) return Object.values(temp).every((x) => x === "");
+    if (fieldValues === values)
+      return Object.values(temp).every((x) => x === "");
   };
 
   const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
@@ -46,98 +45,40 @@ export default function LoteForm(props) {
     if (recordForEdit != null)
       setValues({
         ...recordForEdit,
-      });     
+      });
   }, [recordForEdit]);
 
+  function getStepContent() {
+    switch (ativo) {
+      case 0:
+        return (
+          <LoteNormal values={values} handleInputChange={handleInputChange} />
+        );
+      case 1:
+        return (
+          <LoteJuridico values={values} handleInputChange={handleInputChange} />
+        );
+
+      default:
+        throw new Error("Unknown step");
+    }
+  }
+
   return (
-    <Form onSubmit={handleSubmit}>
-      <Grid container spacing={3}>
-        <Controls.Input
-          grid={4}
-          name="imogeo"
-          label="Código"
-          value={values.imogeo}
-          onChange={handleInputChange}
-          error={errors.imogeo}
-        />
+    <Grid container spacing={3}>
+      <ButtonGroup variant="outlined" aria-label="outlined button group">
+        <Button onClick={() => setAtivo(0)}>Informação</Button>
+        <Button onClick={() => setAtivo(1)}>Jurídico</Button>
+      </ButtonGroup>
 
-        <Controls.Input
-          grid={4}
-          label="SQL"
-          name="imosql"
-          value={values.imosql}
-          onChange={handleInputChange}
-          error={errors.imosql}
-        />
-        <Controls.Input
-          grid={4}
-          label="IPTU"
-          name="imoiptu"
-          value={values.imoiptu}
-          onChange={handleInputChange}
-          error={errors.imoiput}
-        />
-        {/* linha */}
+      {getStepContent()}
 
-        <Controls.Input
-          grid={5}
-          label="Endereço"
-          name="imoend"
-          value={values.imoend}
-          onChange={handleInputChange}
-          error={errors.imoend}
-        />
-        <Controls.Input
-          grid={2}
-          label="Nº"
-          name="imonum"
-          value={values.imonum}
-          onChange={handleInputChange}
-        />
-        <Controls.Input
-          grid={5}
-          label="Bairro"
-          name="imobai"
-          value={values.imobai}
-          onChange={handleInputChange}
-        />
-        {/* linha */}
-
-        <Controls.Input
-          grid={7}
-          label="Município"
-          name="imomun"
-          value={values.imomun}
-          onChange={handleInputChange}
-          error={errors.imomun}
-        />
-        <Controls.Input
-          grid={2}
-          label="UF"
-          name="imouf"
-          value={values.imouf}
-          onChange={handleInputChange}
-        />
-        <Controls.Input
-          grid={3}
-          label="Cep"
-          name="imocep"
-          value={values.imocep}
-          onChange={handleInputChange}
-        />
-        <Controls.RadioGroup
-          name="imopessoa"
-          label="Pessoa"
-          value={values.imopessoa}
-          onChange={handleInputChange}
-          items={pessoaItems}
-        />
-
+      <Grid item xs={12} >   
         <div>
-          <Controls.Button type="submit" text="Salvar" />
+          <Controls.Button type="submit" text="Salvar" onClick={handleSubmit} />
           <Controls.Button text="Limpar" color="default" onClick={resetForm} />
         </div>
       </Grid>
-    </Form>
+    </Grid>
   );
 }
