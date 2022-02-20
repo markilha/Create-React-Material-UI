@@ -7,7 +7,7 @@ export default function Input(props) {
     <Grid item xs={grid} >   
       <TextField
         variant="outlined"
-        color="warning"
+        color="primary"
         size="small"
         margin="dense"   
         label={label}
@@ -17,7 +17,7 @@ export default function Input(props) {
         fullWidth
         autoComplete="family-name"        
         InputProps={{
-          color: "success",            
+          color: "primary",            
         }}  
         {...other}
         {...(error && { error: true, helperText: error })}

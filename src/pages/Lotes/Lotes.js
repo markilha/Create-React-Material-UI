@@ -38,7 +38,7 @@ const headCells = [
   { id: "imogeo", label: "Codigo" },
   { id: "imosql", label: "SQL" },
   { id: "imomun", label: "Municipio" },
-  { id: "imobai", label: "Bairro" }, 
+  { id: "imobai", label: "Bairro" },
   { id: "acoes", label: "Ações", disableSorting: true },
 ];
 
@@ -46,7 +46,8 @@ export default function Employees() {
   const classes = useStyles();
   const [atual, setAtual] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState([]); 
+  
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
@@ -84,7 +85,7 @@ export default function Employees() {
     let target = e.target;
     setFilterFn({
       fn: (items) => {
-        if (target.value == "") {
+        if (target.value === "") {
           return items;
         } else {
           return items.filter((x) =>
@@ -98,7 +99,7 @@ export default function Employees() {
     let target = e.target;
     setFilterFn({
       fn: (items) => {
-        if (target.value == "") {
+        if (target.value === "") {
           return items;
         } else {
           return items.filter((x) =>
@@ -110,7 +111,8 @@ export default function Employees() {
   };
 
   const addOrEdit = (lote, resetForm) => {
-    if (lote.imoid == 0) {
+    
+    if (lote.imoid === 0) {
       async function updateLote() {
         try {
           const query = {
@@ -124,13 +126,49 @@ export default function Employees() {
       }
       updateLote();
     } else {
+      
       async function updateLote() {
         try {
+
+          let valores = "";
+          Object.keys(lote).forEach((item) => {
+            let val = "";
+            if (lote[item] == null || lote[item] === 'undefined') val = "";
+            else val = lote[item];
+            
+            valores += `${item} = '${val}',`;
+          });
+
+           valores = valores.substring(0,valores.length-1);
+
           const query = {
-            query: `UPDATE tblimo SET imosql = '${lote.imosql}' WHERE imoid = ${lote.imoid}`,
-          };
-          await api.patch("/lotes", query);
+            query: `UPDATE tblimo SET ${valores} WHERE imoid = ${lote.imoid}`,
+          };        
+
+        const response =  await api.post("/lotes", query);
+        console.log(response.status)
+        
+        if(response.status === 200){
+          setNotify({
+            isOpen: true,
+            message: 'Registro atualizado com sucesso!!!',
+            type: "success",
+          });      
+       
+        }else{
+          setNotify({
+            isOpen: true,
+            message: 'Ops! Ocorreu um erro ao tentar atualizar',
+            type: "error",
+          });        
+       
+        }
+         
+
+        
+        
           setAtual(!atual);
+
         } catch (err) {
           console.log(err);
         }
@@ -141,11 +179,7 @@ export default function Employees() {
     setRecordForEdit(null);
     setOpenPopup(false);
     setRecords(records);
-    setNotify({
-      isOpen: true,
-      message: "Salvo com sucesso",
-      type: "success",
-    });
+    
   };
 
   const openInPopup = (item) => {
@@ -226,7 +260,7 @@ export default function Employees() {
                 <TableCell>{item.imosql}</TableCell>
                 <TableCell>{item.imomun}</TableCell>
                 <TableCell>{item.imobai}</TableCell>
-              
+
                 <TableCell>
                   <Controls.ActionButton
                     color="primary"

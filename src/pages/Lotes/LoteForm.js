@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Grid, Paper, Container } from "@material-ui/core";
+import { Grid} from "@material-ui/core";
 import Controls from "../../components/controls/Controls";
 import { useForm, Form } from "../../components/useForm";
 //import * as employeeService from "../../services/employeeService";
@@ -15,7 +15,7 @@ const initialFValues = {
   imosql: "",
   imomun: "",
   imobai: "",
-  imopessoa: "juridica",
+  imopessoa: "Física",
 };
 
 export default function LoteForm(props) {
@@ -29,7 +29,7 @@ export default function LoteForm(props) {
       ...temp,
     });
 
-    if (fieldValues == values) return Object.values(temp).every((x) => x == "");
+    if (fieldValues === values) return Object.values(temp).every((x) => x === "");
   };
 
   const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
@@ -46,7 +46,7 @@ export default function LoteForm(props) {
     if (recordForEdit != null)
       setValues({
         ...recordForEdit,
-      });
+      });     
   }, [recordForEdit]);
 
   return (
