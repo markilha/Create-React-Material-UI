@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import LoteForm from "./LoteForm";
+import Principal from "../../components/Lote/Principal";
 import {
   Paper,
   makeStyles,
@@ -47,6 +47,7 @@ export default function Employees() {
   const [atual, setAtual] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [records, setRecords] = useState([]); 
+  const [filtro, setFiltro] = useState([]);
   
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
@@ -65,8 +66,9 @@ export default function Employees() {
     subTitle: "",
   });
 
+
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(filtro, headCells, filterFn); 
 
   useEffect(() => {
     async function loadLotes() {
@@ -76,6 +78,8 @@ export default function Employees() {
         };
         const response = await api.post("/lotes", pesq);
         setRecords(response.data.response.lotes);
+        setFiltro(response.data.response.lotes);
+      
       } catch {}
     }
     loadLotes();
@@ -83,17 +87,25 @@ export default function Employees() {
 
   const handleSearch = (e) => {
     let target = e.target;
-    setFilterFn({
-      fn: (items) => {
-        if (target.value === "") {
-          return items;
-        } else {
-          return items.filter((x) =>
-            x.imosql.toLowerCase().includes(target.value)
-          );
-        }
-      },
-    });
+    setFiltro(
+      records.filter(
+        (item) =>
+          item.imosql.toLowerCase().indexOf(target.value.toLocaleLowerCase()) > -1
+      )
+    );
+   
+  
+    // setFilterFn({
+    //   fn: (items) => {
+    //     if (target.value === "") {
+    //       return items;
+    //     } else {
+    //       return items.filter((x) =>
+    //         x.imosql.toLowerCase().includes(target.value)
+    //       );
+    //     }
+    //   },
+    // });
   };
   const handleSearchMnicipio = (e) => {
     let target = e.target;
@@ -178,7 +190,7 @@ export default function Employees() {
     resetForm();
     setRecordForEdit(null);
     setOpenPopup(false);
-    setRecords(records);
+    setRecords(filtro);
     
   };
 
@@ -299,7 +311,7 @@ export default function Employees() {
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <LoteForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
+        <Principal recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
       </Popup>
 
       <Notification notify={notify} setNotify={setNotify} />

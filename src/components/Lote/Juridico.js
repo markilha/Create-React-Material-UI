@@ -1,18 +1,12 @@
 import React from "react";
 import { Grid} from "@material-ui/core";
-import Controls from "../../components/controls/Controls";
-
-
-
+import Controls from "../controls/Controls";
 
 const pessoaItems = [
   { id: "Física", title: "Física" },
   { id: "Jurídica", title: "Jurídica" },
 ];
-
-
-
-export default function LoteJuridico({values,handleInputChange}) {
+export default function Juridico({values,handleInputChange}) {
 
   return (
    // <Form onSubmit={handleSubmit}>

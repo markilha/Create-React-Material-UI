@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Button, ButtonGroup } from "@material-ui/core";
 
-import Controls from "../../components/controls/Controls";
-import { useForm } from "../../components/useForm";
-import LoteJuridico from "./LoteJuridico";
-import LoteNormal from "./LoteNormal";
+import Controls from "../controls/Controls";
+import { useForm } from "../useForm";
+import Juridico from "./Juridico";
+import Informacao from "./Informacao";
 
 const initialFValues = {
   imoid: 0,
@@ -52,11 +52,11 @@ export default function LoteForm(props) {
     switch (ativo) {
       case 0:
         return (
-          <LoteNormal values={values} handleInputChange={handleInputChange} />
+          <Informacao values={values} handleInputChange={handleInputChange} />
         );
       case 1:
         return (
-          <LoteJuridico values={values} handleInputChange={handleInputChange} />
+          <Juridico values={values} handleInputChange={handleInputChange} />
         );
 
       default:

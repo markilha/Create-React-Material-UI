@@ -4,7 +4,7 @@ import SideMenu from "../components/SideMenu";
 import { makeStyles, CssBaseline, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import Header from "../components/Header";
 
-import Lotes from "../pages/Lotes/Lotes";
+import Lotes from "../pages/Lotes";
 
 const theme = createMuiTheme({
   palette: {

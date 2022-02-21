@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid} from "@material-ui/core";
-import Controls from "../../components/controls/Controls";
+import Controls from "../controls/Controls";
 
 export default function LoteNorma({values,handleInputChange}) {
 
