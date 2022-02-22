@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { AppBar, Toolbar, Grid, InputBase, IconButton, Badge, makeStyles } from '@material-ui/core'
-import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
+import People from '@material-ui/icons/People';
+import Terrain from '@material-ui/icons/Terrain';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
-import SearchIcon from '@material-ui/icons/Search';
+import {UtilContext} from '../Contexts/util'
 
 
 const useStyles = makeStyles(theme => ({
@@ -25,30 +25,25 @@ const useStyles = makeStyles(theme => ({
 
 export default function Header() {
 
+    const{quantLotes} = useContext(UtilContext);
+
     const classes = useStyles();
 
     return (
         <AppBar position="static" className={classes.root}>
             <Toolbar>
                 <Grid container
-                    alignItems="center">
-                    <Grid item>
-                        <InputBase
-                            placeholder="Search topics"
-                            className={classes.searchInput}
-                            startAdornment={<SearchIcon fontSize="small" />}
-                        />
-                    </Grid>
+                    alignItems="center">                    
                     <Grid item sm></Grid>
                     <Grid item>
                         <IconButton>
-                            <Badge badgeContent={4} color="secondary">
-                                <NotificationsNoneIcon fontSize="small" />
+                            <Badge badgeContent={0} color="secondary">
+                                <People fontSize="small" />
                             </Badge>
                         </IconButton>
                         <IconButton>
-                            <Badge badgeContent={3} color="primary">
-                                <ChatBubbleOutlineIcon fontSize="small" />
+                            <Badge badgeContent={quantLotes} color="primary">
+                                <Terrain fontSize="small" />
                             </Badge>
                         </IconButton>
                         <IconButton>

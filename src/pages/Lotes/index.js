@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Principal from "../../components/Lote/Principal";
 import {
   Paper,
@@ -19,6 +19,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import api from "../../services/api";
+import {UtilContext} from '../../Contexts/util';
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -43,6 +44,7 @@ const headCells = [
 ];
 
 export default function Employees() {
+  const {setQuantLotes} = useContext(UtilContext)
   const classes = useStyles();
   const [atual, setAtual] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
@@ -79,6 +81,7 @@ export default function Employees() {
         const response = await api.post("/lotes", pesq);
         setRecords(response.data.response.lotes);
         setFiltro(response.data.response.lotes);
+        setQuantLotes(response.data.response.lotes.length.toString())
       
       } catch {}
     }
@@ -93,34 +96,19 @@ export default function Employees() {
           item.imosql.toLowerCase().indexOf(target.value.toLocaleLowerCase()) > -1
       )
     );
-   
-  
-    // setFilterFn({
-    //   fn: (items) => {
-    //     if (target.value === "") {
-    //       return items;
-    //     } else {
-    //       return items.filter((x) =>
-    //         x.imosql.toLowerCase().includes(target.value)
-    //       );
-    //     }
-    //   },
-    // });
   };
-  const handleSearchMnicipio = (e) => {
+
+  const handleSearchM = (e) => {
     let target = e.target;
-    setFilterFn({
-      fn: (items) => {
-        if (target.value === "") {
-          return items;
-        } else {
-          return items.filter((x) =>
-            x.imomun.toLowerCase().includes(target.value)
-          );
-        }
-      },
-    });
+    setFiltro(
+      records.filter(
+        (item) =>
+          item.imosql.toLowerCase().indexOf(target.value.toLocaleLowerCase()) > -1
+      )
+    );
   };
+
+ 
 
   const addOrEdit = (lote, resetForm) => {
     
@@ -172,12 +160,9 @@ export default function Employees() {
             isOpen: true,
             message: 'Ops! Ocorreu um erro ao tentar atualizar',
             type: "error",
-          });        
+          });       
        
         }
-         
-
-        
         
           setAtual(!atual);
 
@@ -250,7 +235,7 @@ export default function Employees() {
                 </InputAdornment>
               ),
             }}
-            onChange={handleSearchMnicipio}
+            onChange={handleSearchM}
           />
           <Controls.Button
             text="Novo lote"
