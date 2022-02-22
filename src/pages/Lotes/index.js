@@ -19,7 +19,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import api from "../../services/api";
-import {UtilContext} from '../../Contexts/util';
+import {AuthContext} from '../../contexts/auth';
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -44,7 +44,7 @@ const headCells = [
 ];
 
 export default function Employees() {
-  const {setQuantLotes} = useContext(UtilContext)
+  const {setQuantLotes} = useContext(AuthContext)
   const classes = useStyles();
   const [atual, setAtual] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);

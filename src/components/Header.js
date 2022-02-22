@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Grid, InputBase, IconButton, Badge, makeStyles } from 
 import People from '@material-ui/icons/People';
 import Terrain from '@material-ui/icons/Terrain';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
-import {UtilContext} from '../Contexts/util'
+import {AuthContext} from '../contexts/auth'
 
 
 const useStyles = makeStyles(theme => ({
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Header() {
 
-    const{quantLotes} = useContext(UtilContext);
+    const{quantLotes} = useContext(AuthContext);
 
     const classes = useStyles();
 

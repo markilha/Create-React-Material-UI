@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from 'react-router-dom';
 import "./App.css";
 import SideMenu from "../components/SideMenu";
 import {
@@ -9,10 +9,11 @@ import {
   ThemeProvider,
 } from "@material-ui/core";
 import Header from "../components/Header";
-import UtilProvider from "../Contexts/util";
+import AuthProvider from "../contexts/auth";
 import Routes from "../routes/Route";
 
 import Lotes from "../pages/Lotes";
+import SignIn from "../pages/Signin";
 
 const theme = createMuiTheme({
   palette: {
@@ -53,19 +54,18 @@ function App() {
   const classes = useStyles();
 
   return (
-    <UtilProvider>
+    <AuthProvider>
       <BrowserRouter>
-        <Routes />
-        <ThemeProvider theme={theme}>
-          <SideMenu />
-          <div className={classes.appMain}>
-            <Header />
-            <Lotes />
-          </div>
+       
+        <ThemeProvider theme={theme}>       
+                  
+        <Routes />     
+        <SignIn/>
+         
           <CssBaseline />
         </ThemeProvider>
       </BrowserRouter>
-    </UtilProvider>
+    </AuthProvider>
   );
 }
 
